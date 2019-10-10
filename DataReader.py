@@ -8,63 +8,57 @@ import os
 
 
 class DataReader:
-    def __init__(self):
-        self.countries = pd.read_excel('population -countries.xls', sep=' ', encoding='utf-8')
-        self.world = pd.read_excel('population - world.xls', sep=' ', encoding='utf-8')
+    '''
+        an Object of this Class could analyse data and give needed Information back
+    '''
+    def __init__(self, countriesData, worldData, amountOfTopCountries):
+        self.countriesData = countriesData
+        self.worldData = worldData
+
         self.deleteOtherCollums()
+        self.amountOfTopCountries = amountOfTopCountries
 
     def deleteOtherCollums(self):
         '''
         Delete no needed Columns in the countries population table
         '''
 
-        self.countries = self.countries.drop(columns=['Country Code', 'Indicator Name', 'Indicator Code'])
+        self.countriesData = self.countriesData.drop(columns=['Country Code', 'Indicator Name', 'Indicator Code'])
 
     def getCountOfCountries(self):
         '''
         Get the count of Countries back
         :return: count of Countries
         '''
-        return len(self.countries)
+        return len(self.countriesData)
 
     def getCountOfYears(self):
         '''
         Get the count of recorded years back
         :return: count of recorded years
         '''
-        return len(self.world)
+        return len(self.worldData)
 
-    def getTop20Countries(self, year):
+    def getTopCountries(self, year):
         '''
-        Get 20 Countries, which have most population
-        :return: The Dictionary of the Names of 20 Countries
-        '''
-
-        # remove all values from another years
-        populationInYear = self.countries[['Country Name', str(year)]]
-        # get top 20 countries
-        populationInYear = populationInYear.nlargest(20, columns=str(year))
-        #print (populationInYear)
-        # convert the top 20 Dataframe to a dict
-        top20Dict = populationInYear.set_index('Country Name').to_dict()
-        return top20Dict.get(str(year))
-
-    def getTop20CountriesInDataFrame(self, year):
-        '''
-        Get 20 Countries, which have most population
-        :return: The Dictionary of the Names of 20 Countries
+        Get a dictionary of Countries, which have most population
+        :return: The Dictionary of the Names of Countries
         '''
 
         # remove all values from another years
-        populationInYear = self.countries[['Country Name', str(year)]]
+        populationInYear = self.countriesData[['Country Name', str(year)]]
         # get top 20 countries
-        populationInYear = populationInYear.nlargest(20, columns=str(year))
-        populationInYear = populationInYear.astype({str(year): int})
-
-        return populationInYear
+        populationInYear = populationInYear.nlargest(self.amountOfTopCountries, columns=str(year))
+        # convert the top Dataframe to a dict
+        topDict = populationInYear.set_index('Country Name').to_dict()
+        return topDict.get(str(year))
 
     def getFirstYear(self):
-        return self.world.iloc[0,1]
+        '''
+        Get the earliest year in data
+        :return: earliest year in type numpy.int64
+        '''
+        return self.worldData.iloc[0, 1]
 
     def getWorldPopulationInYearsDict(self):
         '''
@@ -72,19 +66,21 @@ class DataReader:
         :return: The Dictionary
         '''
         # delete fisrt column
-        worldPopulation = self.world[['year', 'population']]
+        worldPopulation = self.worldData[['year', 'population']]
         # convert to dictionary
         worldPopulation = worldPopulation.set_index('year').to_dict()
         # print(worldPopulation.get('population'))
         return worldPopulation.get('population')
 
     def getHighestPopulationOfAllCountries(self):
-        countries = self.countries.melt(id_vars='Country Name')
+        '''
+        Get the highest population of all Countries in all years.
+        :return: highest population. Type int
+        '''
+        countries = self.countriesData.melt(id_vars='Country Name')
         countries = countries.rename(columns={'Country Name': 'country', 'variable': 'year', 'value': 'population'})
         countries = countries[~ countries.population.isna()]
         countries = countries.astype({'population': int})
         return countries.population.max()
 
 
-#reader = DataReader()
-#reader.deleteOtherCollums()
