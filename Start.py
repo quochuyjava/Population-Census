@@ -2,6 +2,7 @@ import DataReader as reader
 import Year
 import Graph
 import pandas as pd
+import ApplicationWindow
 
 # Variable declaration:
 countriesData = pd.read_excel('population -countries.xls', sep=' ', encoding='utf-8')   # Link to excel file
@@ -16,6 +17,10 @@ def start():
     yearsDict = init_years(dataReader)
     graph = Graph.Graph(dataReader, yearsDict, imageOutputFolder, videoOutputFolder)
     graph.render()
+
+    window = ApplicationWindow.khoichay(graph.getFigureList())
+    # return graph.getFigure()              # Render hinh tren Window ok
+
 
 
 def init_years(dataReader):

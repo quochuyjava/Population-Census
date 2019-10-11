@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Population-Census.iml" filepath="$PROJECT_DIR$/.idea/Population-Census.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Tutorial Thread/.idea/Tutorial Thread.iml" filepath="$PROJECT_DIR$/../Tutorial Thread/.idea/Tutorial Thread.iml" />
     </modules>
   </component>
 </project>

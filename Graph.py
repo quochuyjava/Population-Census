@@ -1,7 +1,12 @@
+import sys
+import threading
+
 import matplotlib.pyplot as plt
 import seaborn as sb
 import os
 import cv2
+from PyQt5.QtWidgets import QApplication
+
 
 
 class Graph:
@@ -17,6 +22,9 @@ class Graph:
         self.imageOutputFolder = imageOutputFolder
         self.videoOutputFolder = videoOutputFolder
 
+        self.figureList = []                                        # A List to save all rendered Figures
+
+
     def render(self):
         process = 0
         for x in range(self.NumberOfYears):                         # Each loop for a year
@@ -28,7 +36,7 @@ class Graph:
             topPopulationThisYearList = thisYearObject.getTopPopulationList()
 
             # Size of the Image width x height in Inches
-            plt.figure(figsize=(15, 10))
+            self.pic = plt.figure(figsize=(15, 10))
             # set Style in Seabron
             sb.set_style('dark')
             # Draw the Graph
@@ -37,7 +45,7 @@ class Graph:
                 y=topCountriesThisYearList,
                 palette=sb.color_palette("YlOrRd_r", self.numberOfCountries))           # Color for the bars
             # Set title
-            title = "Top 20 Countries with the Highest Population".upper() + '\n ' + str(thisYearInt)
+            title = "Top " +str(self.numberOfCountries)+ " Countries with the Highest Population".upper() + '\n ' + str(thisYearInt)
             title_obj = plt.title(title)
             plt.setp(title_obj, color='orangered', fontsize=30)
 
@@ -80,14 +88,20 @@ class Graph:
                      '\nData sources: https://data.worldbank.org',
                      color='royalblue', va="center", fontsize=13)
 
-            self.saveImages(thisYearInt)
+            #self.saveImages(thisYearInt, self.pic)
+            self.addFiguretoList(thisYearInt, self.pic)
 
-    def saveImages(self, thisYear):
-        # Lưu biểu đồ
+    def saveImages(self, thisYear, pic):                        # Save image to png files (not in use)
         filename = 'population_' + str(thisYear) + '.png'
-        plt.savefig('/Users/quochuy/Desktop/Github/Population-Census/Images/' + filename, dpi=100)
-        plt.gca()
+        plt.savefig('/Users/quochuy/Desktop/Github/Population-Census/Images/' + filename, dpi=50)
         plt.close()
+
+    def addFiguretoList(self, thisYear, pic):
+        self.figureList.append(self.pic)
+        plt.close()
+
+    def getFigureList(self):
+        return self.figureList
 
     def getFormattedStr(self, population):
         '''
