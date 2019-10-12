@@ -23,7 +23,7 @@ class Graph:
         self.videoOutputFolder = videoOutputFolder
 
         self.figureList = []                                        # A List to save all rendered Figures
-        self.framePerYear = 5
+        self.framePerYear = 3
 
 
     def render(self):
@@ -97,18 +97,26 @@ class Graph:
                          color='royalblue', va="center", fontsize=13)
 
                 #self.saveImages(thisYearInt, self.pic)
-                self.addFiguretoList(thisYearInt, self.pic)
+                self.addFiguretoList(self.pic)
 
     def saveImages(self, thisYear, pic):                        # Save image to png files (not in use)
         filename = 'population_' + str(thisYear) + '.png'
         plt.savefig('/Users/quochuy/Desktop/Github/Population-Census/Images/' + filename, dpi=50)
         plt.close()
 
-    def addFiguretoList(self, thisYear, pic):
+    def addFiguretoList(self, pic):
+        '''
+        Add the rendered figure to List
+        :param pic: The rendered Figure
+        '''
         self.figureList.append(self.pic)
         plt.close()
 
     def getFigureList(self):
+        '''
+        Give the List of all RENDERED FIGURES
+        :return:
+        '''
         return self.figureList
 
     def getFormattedStr(self, population):
@@ -119,7 +127,7 @@ class Graph:
         '''
         return f'{int(population):,}'
 
-    def getNumberofFrames(self):
+    def getNumberofFramesWouldBeRendered(self):
         return self.NumberOfYears * self.framePerYear
 
     def getRelativeSize(self, size):

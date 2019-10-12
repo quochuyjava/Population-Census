@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1013</width>
-    <height>641</height>
+    <height>591</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,17 +16,18 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <layout class="QHBoxLayout" name="subreddits_input_layout"/>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_submissions_list">
+     <widget class="QLabel" name="label_graph">
       <property name="text">
        <string>Graph:</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QGraphicsView" name="view_graph"/>
+     <layout class="QVBoxLayout" name="view_layout">
+      <item>
+       <widget class="QGraphicsView" name="view_graph"/>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="QProgressBar" name="progress_bar">
