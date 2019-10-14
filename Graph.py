@@ -53,8 +53,7 @@ class Graph:
                     y=topCountriesThisYearList,
                     palette=sb.color_palette("YlOrRd_r", self.numberOfCountries))           # Color for the bars
                 # Set title
-                title = "Top " +str(self.numberOfCountries)+ " Countries with the Highest Population".upper() + '\n ' + str(thisYearInt)
-                title_obj = plt.title(title)
+                title_obj = plt.title("Top " +str(self.numberOfCountries)+ " Countries with the Highest Population".upper() + '\n ' + str(thisYearInt))
                 plt.setp(title_obj, color='orangered', fontsize=30)
 
                 # Draw the Axes
