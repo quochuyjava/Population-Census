@@ -157,6 +157,9 @@ class MainWindow(QtGui.QMainWindow, design.Ui_MainWindow):
 
 
     def play(self):
+        '''
+        Play rendered Frames
+        '''
         # Update UI
         self.btn_play_pause.setEnabled(False)
         self.btn_stop.setEnabled(True)
@@ -167,10 +170,10 @@ class MainWindow(QtGui.QMainWindow, design.Ui_MainWindow):
         self._timer2.start()
 
 
-
     def stop(self):
-        #self.btn_play_pause.setEnabled(True)
-
+        '''
+        Stop playing
+        '''
         self._timer2.stop()
 
 
