@@ -24,8 +24,6 @@ class Graph:
 
         self.figureList = []                                        # A List to save all rendered Figures
         self.framePerYear = 3
-
-
     def render(self):
         for x in range(self.NumberOfYears):                         # Each loop for a year
             # Variable declaration for each year

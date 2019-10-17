@@ -1,65 +1,58 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'threading_design.ui'
+# Form implementation generated from reading ui file 'designcopy.ui'
 #
-# Created: Thu Aug  6 13:47:18 2015
-#      by: PyQt4 UI code generator 4.10.4
+# Created by: PyQt5 UI code generator 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtWidgets as QtGui
-from PyQt5 import QtCore
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    def _fromUtf8(s):
-        return s
 
-try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
-except AttributeError:
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
+from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-        MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(526, 373)
-        self.centralwidget = QtGui.QWidget(MainWindow)
-        self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
-        self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
-        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.subreddits_input_layout = QtGui.QHBoxLayout()
-        self.subreddits_input_layout.setObjectName(_fromUtf8("subreddits_input_layout"))
-        self.label_subreddits = QtGui.QLabel(self.centralwidget)
-        self.label_subreddits.setObjectName(_fromUtf8("label_subreddits"))
-        self.subreddits_input_layout.addWidget(self.label_subreddits)
-        self.edit_subreddits = QtGui.QLineEdit(self.centralwidget)
-        self.edit_subreddits.setObjectName(_fromUtf8("edit_subreddits"))
-        self.subreddits_input_layout.addWidget(self.edit_subreddits)
-        self.verticalLayout.addLayout(self.subreddits_input_layout)
-        self.label_submissions_list = QtGui.QLabel(self.centralwidget)
-        self.label_submissions_list.setObjectName(_fromUtf8("label_submissions_list"))
-        self.verticalLayout.addWidget(self.label_submissions_list)
-        self.list_submissions = QtGui.QListWidget(self.centralwidget)
-        self.list_submissions.setBatchSize(1)
-        self.list_submissions.setObjectName(_fromUtf8("list_submissions"))
-        self.verticalLayout.addWidget(self.list_submissions)
-        self.progress_bar = QtGui.QProgressBar(self.centralwidget)
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(1432, 819)
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.view_layout = QtWidgets.QVBoxLayout()
+        self.view_layout.setObjectName("view_layout")
+        self.view_graph = QtWidgets.QGraphicsView(self.centralwidget)
+        self.view_graph.setObjectName("view_graph")
+        self.view_layout.addWidget(self.view_graph)
+        self.verticalLayout.addLayout(self.view_layout)
+        self.status_layout = QtWidgets.QVBoxLayout()
+        self.status_layout.setObjectName("status_layout")
+        self.progress_bar = QtWidgets.QProgressBar(self.centralwidget)
         self.progress_bar.setProperty("value", 0)
-        self.progress_bar.setObjectName(_fromUtf8("progress_bar"))
-        self.verticalLayout.addWidget(self.progress_bar)
-        self.buttons_layout = QtGui.QHBoxLayout()
-        self.buttons_layout.setObjectName(_fromUtf8("buttons_layout"))
-        self.btn_stop = QtGui.QPushButton(self.centralwidget)
-        self.btn_stop.setEnabled(False)
-        self.btn_stop.setObjectName(_fromUtf8("btn_stop"))
-        self.buttons_layout.addWidget(self.btn_stop)
-        self.btn_start = QtGui.QPushButton(self.centralwidget)
-        self.btn_start.setObjectName(_fromUtf8("btn_start"))
+        self.progress_bar.setObjectName("progress_bar")
+        self.status_layout.addWidget(self.progress_bar)
+        self.label_status = QtWidgets.QLabel(self.centralwidget)
+        self.label_status.setObjectName("label_status")
+        self.status_layout.addWidget(self.label_status)
+        self.verticalLayout.addLayout(self.status_layout)
+        self.buttons_layout = QtWidgets.QHBoxLayout()
+        self.buttons_layout.setObjectName("buttons_layout")
+        self.btn_start = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_start.setObjectName("btn_start")
         self.buttons_layout.addWidget(self.btn_start)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.buttons_layout.addItem(spacerItem)
+        self.btn_play_pause = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_play_pause.setEnabled(False)
+        self.btn_play_pause.setMinimumSize(QtCore.QSize(100, 0))
+        self.btn_play_pause.setMaximumSize(QtCore.QSize(100, 50))
+        self.btn_play_pause.setObjectName("btn_play_pause")
+        self.buttons_layout.addWidget(self.btn_play_pause)
+        self.btn_stop = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_stop.setEnabled(False)
+        self.btn_stop.setMinimumSize(QtCore.QSize(100, 0))
+        self.btn_stop.setMaximumSize(QtCore.QSize(100, 50))
+        self.btn_stop.setObjectName("btn_stop")
+        self.buttons_layout.addWidget(self.btn_stop)
         self.verticalLayout.addLayout(self.buttons_layout)
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -67,10 +60,9 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "Threading Tutorial - nikolak.com", None))
-        self.label_subreddits.setText(_translate("MainWindow", "Subreddits:", None))
-        self.edit_subreddits.setPlaceholderText(_translate("MainWindow", "python,programming,linux,etc (comma separated)", None))
-        self.label_submissions_list.setText(_translate("MainWindow", "Submissions:", None))
-        self.btn_stop.setText(_translate("MainWindow", "Stop", None))
-        self.btn_start.setText(_translate("MainWindow", "Start", None))
-
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "Population Census"))
+        self.label_status.setText(_translate("MainWindow", "Status: No frame has been rendered"))
+        self.btn_start.setText(_translate("MainWindow", "Render"))
+        self.btn_play_pause.setText(_translate("MainWindow", "Play"))
+        self.btn_stop.setText(_translate("MainWindow", "Stop"))

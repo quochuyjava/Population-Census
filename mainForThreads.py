@@ -1,11 +1,16 @@
+import copy
+
 import pandas as pd
 from PyQt5 import QtWidgets as QtGui, QtWidgets
-from PyQt5.QtCore import QThread
+from PyQt5.QtCore import QThread, QRect
 import sys
 
 from PyQt5.QtWidgets import QApplication
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-import design3
+
+import DataReader
+import Graph
+import design
 import time
 
 # Declaration of global Variables
@@ -69,7 +74,7 @@ class DrawGraphThread(QThread):
         graph.render()
 
 
-class MainWindow(QtGui.QMainWindow, design3.Ui_MainWindow):
+class MainWindow(QtGui.QMainWindow, design.Ui_MainWindow):
     """
     This Class's functions draw figures on GUI and do tasks with GUI
     """
@@ -77,7 +82,8 @@ class MainWindow(QtGui.QMainWindow, design3.Ui_MainWindow):
         super(self.__class__, self).__init__()
         self.setupUi(self)
         self.btn_start.clicked.connect(self.renderButtonClicked)
-        self.btn_stop.clicked.connect(self.stopButtonClicked)
+        self.btn_play_pause.clicked.connect(self.play)
+        self.btn_stop.clicked.connect(self.stop)
         self.resize(1500, 1100)
 
 
@@ -87,9 +93,7 @@ class MainWindow(QtGui.QMainWindow, design3.Ui_MainWindow):
         '''
         # Change GUI Components
         QApplication.processEvents()
-        self.view_graph.setParent(None)
         self.btn_start.setEnabled(False)
-        self.btn_stop.setEnabled(True)
 
         # FROM HIER: RUN IN NEW THREAD
         self.get_thread = DrawGraphThread()
@@ -113,59 +117,84 @@ class MainWindow(QtGui.QMainWindow, design3.Ui_MainWindow):
         thisFigure = FigureList[self.frameNumber]
         self.dynamic_canvas = FigureCanvas(thisFigure)
         self.view_layout.addWidget(self.dynamic_canvas)
+        self.view_layout.removeWidget(self.dynamic_canvas)
+
 
         #Loop to update Figures
-        self._timer = self.dynamic_canvas.new_timer(100, [(self.updateFigure, (), {})])
+        self._timer = self.dynamic_canvas.new_timer(100,
+                                                    callbacks=[(self.updateFigure, [], {})])
         self._timer.start()
+
+
 
     def updateFigure(self):
         '''
         Update the Figure. When the a figure need to draw but still not in the FigureList, it wait with a for-loop
         :return:
         '''
+
         # Update Progess bar
         if self.progress_bar.value() != 100:
             self.progress_bar.setValue(float((len(FigureList) / NumberOfFramesWouldBeRendered)) * 100)
-        else:
-            self.progress_bar.setParent(None)
-            self.btn_stop.setEnabled(False)
-        # The Graph will stop at last Frame
-        if self.frameNumber >= NumberOfFramesWouldBeRendered - 1 :
-            self._timer.stop()
-        else:       # Not at last Frame
-            print ('Frame needed to show: [' + str(self.frameNumber +1 ) + ']    Frame rendered: [' + str(len(FigureList) -1) + ']')
-            while self.frameNumber >= len(FigureList) - 1:
-                print ('Frame needed to show: [' + str(self.frameNumber +1 ) + ']    Frame rendered: [' + str(len(FigureList) -1) + ']  - so we have to wait')
-                time.sleep(.200)
+
+            # Add new Frame
+            self.view_layout.addWidget(self.view_graph)
             self.dynamic_canvas.setParent(None)
+            figure = copy.copy(FigureList[len(FigureList) -1])  # prevent figure to zoom in
+            self.dynamic_canvas = FigureCanvas(figure)
+            self.view_layout.addWidget(self.dynamic_canvas)
+            self.view_layout.removeWidget(self.dynamic_canvas)
+            self.label_status.setText("Rendering "+ str(self.progress_bar.value()) + '% done')
+
+
+        else:       # All Frames are rendered
+            self._timer.stop()
+            self.btn_play_pause.setEnabled(True)
+            self.btn_stop.setEnabled(True)
+            self.progress_bar.hide()
+            self.dynamic_canvas.setParent(None)
+            self.label_status.setText("Rendering is finished.")
+
+
+    def play(self):
+        # Update UI
+        self.btn_play_pause.setEnabled(False)
+        self.btn_stop.setEnabled(True)
+        self.label_status.hide()
+
+        self.frameNumber = 0
+        self._timer2 = self.dynamic_canvas.new_timer(100, callbacks=[(self.updateFigurePlayback, [], {})])
+        self._timer2.start()
+
+
+
+    def stop(self):
+        #self.btn_play_pause.setEnabled(True)
+
+        self._timer2.stop()
+
+
+    def updateFigurePlayback(self):
+        '''
+        Update the Figure. When the a figure need to draw but still not in the FigureList, it wait with a for-loop
+        :return:
+        '''
+        # The Graph will stop at last Frame
+        if self.frameNumber >= NumberOfFramesWouldBeRendered - 1:
+            self._timer.stop()
+        else:  # Not at last Frame
+            self.view_graph.setParent(None)
+            self.view_layout.removeWidget(self.label_status)
+            if self.frameNumber != 0:
+                self.view_layout.removeWidget(self.dynamic_canvas)
+                self.dynamic_canvas.deleteLater()
             self.frameNumber = self.frameNumber + 1
             figure = FigureList[self.frameNumber]
             self.dynamic_canvas = FigureCanvas(figure)
             self.view_layout.addWidget(self.dynamic_canvas)
 
-            # Delete previous Frame to save RAM Memory
-            FigureList[self.frameNumber -1] = None
-
-    def stopButtonClicked(self):
-        self.frameNumber = NumberOfFramesWouldBeRendered
-        QApplication.processEvents()
-        self.btn_stop.setEnabled(False)
-        self.btn_start.setEnabled(True)
-        #self.get_thread.terminate()
-        #del(self.get_thread)
-        global FigureList
-        FigureList = []
-        #self.dynamic_canvas.setParent(None)
-
-
     def closeEvent(self, event):
-        #self.deleteLater()
-        #self.close()
         sys.exit(app.exec_())
-
-
-
-
 
 
 def main():
